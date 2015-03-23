@@ -1,7 +1,7 @@
 
 package sqliteExample;
 
-public class LocalTableAttribute {
+public class TableAttributeLocal {
     // table1 name and attribute which display user info //
     public final static String USER_INFO_TABLE = "User_Info_Table";
     public final static String CHAT_ID = "ChatID";

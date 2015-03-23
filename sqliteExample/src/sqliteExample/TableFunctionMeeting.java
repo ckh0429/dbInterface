@@ -11,9 +11,9 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
-import sqliteExample.ServerTableAttribute;
+import sqliteExample.TableAttributeServer;
 
-public class GroupChatTableFunction extends ServerTableAttribute {
+public class TableFunctionMeeting extends TableAttributeServer {
     private static Connection mConnection = null;
     private static Statement mStatement = null;
 
@@ -22,11 +22,13 @@ public class GroupChatTableFunction extends ServerTableAttribute {
             mConnection = DriverManager.getConnection("jdbc:sqlite:" + dbName + ".db");
             System.out.println("Opened database successfully");
             mStatement = mConnection.createStatement();
-            String sql = "CREATE TABLE if not exists " + GROUP_CHAT_TABLE + "(" + GROUP_CHAT_ID
-                    + " INTEGER PRIMARY KEY AUTOINCREMENT, " + GROUP_CHAT_FROM_WHO + " CHAR(20) NOT NULL, "
-                    + GROUP_CHAT_TO_WHO + " CHAR(20) NOT NULL, " + GROUP_CHAT_CONTENT + " TEXT, " + GROUP_CHAT_TIME
-                    + " CHAR(20) NOT NULL, " + GROUP_CHAT_READ_STATUS + " TEXT, " + GROUP_CHAT_POST_ID + " CHAR(20) "
-                    + ")";
+            String sql = "CREATE TABLE if not exists " + MEETING_TABLE + "(" + MEETING_ID
+                    + " INTEGER PRIMARY KEY AUTOINCREMENT, " + MEETING_FROM_WHO + " CHAR(20) NOT NULL, "
+                    + MEETING_TO_WHO + " CHAR(20) NOT NULL, " + MEETING_NAME + " TEXT, " + MEETING_START_TIME+ " CHAR(20) NOT NULL, " 
+                    + MEETING_END_TIME + " CHAR(20) NOT NULL, " + MEETING_STATE + " CHAR(20) NOT NULL, " 
+                    + MEETING_NOTES + " TEXT, "+ MEETING_DETAILS + " TEXT, "+ MEETING_WHO_ACCEPT + " TEXT, " 
+                    + MEETING_WHO_REJECT + " TEXT " + ")";
+
             mStatement.executeUpdate(sql);
             mStatement.close();
             mConnection.close();
@@ -34,7 +36,6 @@ public class GroupChatTableFunction extends ServerTableAttribute {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
             return (false);
-
         }
         System.out.println("Table created successfully");
         return true;
@@ -42,26 +43,35 @@ public class GroupChatTableFunction extends ServerTableAttribute {
 
     public static boolean insert(JSONArray rawData) {
 
-        ArrayList<String> groupChatFromWho = new ArrayList<String>();
-        ArrayList<String> groupChatToWho = new ArrayList<String>();
-        ArrayList<String> groupChatContent = new ArrayList<String>();
-        ArrayList<String> groupChatTime = new ArrayList<String>();
-        ArrayList<String> groupChatReadStatus = new ArrayList<String>();
-        ArrayList<String> groupChatPostID = new ArrayList<String>();
+        ArrayList<String> meetingFromWho = new ArrayList<String>();
+        ArrayList<String> meetingToWho = new ArrayList<String>();
+        ArrayList<String> meetingName = new ArrayList<String>();
+        ArrayList<Long> meetingStartTime = new ArrayList<Long>();
+        ArrayList<Long> meetingEndTime = new ArrayList<Long>();
+        ArrayList<String> meetingState = new ArrayList<String>();
+        ArrayList<String> meetingNotes = new ArrayList<String>();
+        ArrayList<String> meetingDetails = new ArrayList<String>();
+        ArrayList<String> meetingWhoAccept = new ArrayList<String>();
+        ArrayList<String> meetingWhoReject = new ArrayList<String>();
         String value = "";
 
         for (int i = 0; i < rawData.size(); i++) {
             JSONObject jobj = (JSONObject) rawData.get(i);
-            groupChatFromWho.add(jobj.get(GROUP_CHAT_FROM_WHO).toString());
-            groupChatToWho.add(jobj.get(GROUP_CHAT_TO_WHO).toString());
-            groupChatContent.add(jobj.get(GROUP_CHAT_CONTENT).toString());
-            groupChatTime.add(jobj.get(GROUP_CHAT_TIME).toString());
-            groupChatReadStatus.add(jobj.get(GROUP_CHAT_READ_STATUS).toString());
-            groupChatPostID.add(jobj.get(GROUP_CHAT_POST_ID).toString());
+            meetingFromWho.add(jobj.get(MEETING_FROM_WHO).toString());
+            meetingToWho.add(jobj.get(MEETING_TO_WHO).toString());
+            meetingName.add(jobj.get(MEETING_NAME).toString());
+            meetingStartTime.add((Long)jobj.get(MEETING_START_TIME));
+            meetingEndTime.add((Long)jobj.get(MEETING_END_TIME));
+            meetingState.add(jobj.get(MEETING_STATE).toString());
+            meetingNotes.add(jobj.get(MEETING_NOTES).toString());
+            meetingDetails.add(jobj.get(MEETING_DETAILS).toString());
+            meetingWhoAccept.add(jobj.get(MEETING_WHO_ACCEPT).toString());
+            meetingWhoReject.add(jobj.get(MEETING_WHO_REJECT).toString());
 
-            value = value + "('" + groupChatFromWho.get(i) + "', '" + groupChatToWho.get(i) + "', '"
-                    + groupChatContent.get(i) + "', '" + groupChatTime.get(i) + "', '" + groupChatReadStatus.get(i)
-                    + "', '" + groupChatPostID.get(i) + "')";
+            value = value + "('" + meetingFromWho.get(i) + "', '" + meetingToWho.get(i) + "', '" + meetingName.get(i)
+                    + "', '" + meetingStartTime.get(i) + "', '" + meetingEndTime.get(i) + "', '" + meetingState.get(i)+ "', '" 
+                    + meetingNotes.get(i) + "', '"+ meetingDetails.get(i) + "', '"+ meetingWhoAccept.get(i) + "', '" 
+                    + meetingWhoReject.get(i) + "')";
 
             if (i != rawData.size() - 1) {
                 value = value + ", ";
@@ -77,9 +87,10 @@ public class GroupChatTableFunction extends ServerTableAttribute {
             mConnection.setAutoCommit(false);
             System.out.println("Opened database successfully");
             mStatement = mConnection.createStatement();
-            String sql = "INSERT INTO " + GROUP_CHAT_TABLE + " (" + GROUP_CHAT_FROM_WHO + "," + GROUP_CHAT_TO_WHO + ","
-                    + GROUP_CHAT_CONTENT + "," + GROUP_CHAT_TIME + "," + GROUP_CHAT_READ_STATUS + ","
-                    + GROUP_CHAT_POST_ID + ") " + "VALUES " + value;
+            String sql = "INSERT INTO " + MEETING_TABLE + " (" + MEETING_FROM_WHO + "," + MEETING_TO_WHO + ","
+                    + MEETING_NAME + "," + MEETING_START_TIME + "," + MEETING_END_TIME + "," + MEETING_STATE + ","
+                    + MEETING_NOTES + ","+ MEETING_DETAILS + ","+ MEETING_WHO_ACCEPT + "," 
+                    + MEETING_WHO_REJECT + ") " + "VALUES " + value;
 
             mStatement.executeUpdate(sql);
             mStatement.close();
@@ -93,7 +104,7 @@ public class GroupChatTableFunction extends ServerTableAttribute {
         return true;
     }
 
-    public static boolean update(int groupChatID, JSONObject rawData) throws FileNotFoundException, IOException,
+    public static boolean update(int meetingID, JSONObject rawData) throws FileNotFoundException, IOException,
             ParseException {
         String setValue = "";
         for (@SuppressWarnings("rawtypes")
@@ -108,8 +119,8 @@ public class GroupChatTableFunction extends ServerTableAttribute {
             mConnection.setAutoCommit(false);
             System.out.println("update Opened database successfully");
             mStatement = mConnection.createStatement();
-            String sql = "UPDATE " + GROUP_CHAT_TABLE + " set " + setValue + " where " + GROUP_CHAT_ID + " = "
-                    + groupChatID + ";";
+            String sql = "UPDATE " + MEETING_TABLE + " set " + setValue + " where " + MEETING_ID + " = " + meetingID
+                    + ";";
             System.out.println("test : " + sql);
             mStatement.executeUpdate(sql);
             mConnection.commit();
@@ -123,13 +134,13 @@ public class GroupChatTableFunction extends ServerTableAttribute {
         return true;
     }
 
-    public static boolean delete(int groupChatID) {
+    public static boolean delete(int meetingID) {
         try {
             mConnection = DriverManager.getConnection("jdbc:sqlite:" + DB_NAME + ".db");
             mConnection.setAutoCommit(false);
             System.out.println("Opened database successfully");
             mStatement = mConnection.createStatement();
-            String sql = "DELETE from " + GROUP_CHAT_TABLE + " where " + GROUP_CHAT_ID + "= " + groupChatID + ";";
+            String sql = "DELETE from " + MEETING_TABLE + " where " + MEETING_ID + "= " + meetingID + ";";
             mStatement.executeUpdate(sql);
             mConnection.commit();
             mStatement.close();

@@ -1,6 +1,6 @@
 package sqliteExample;
 
-public class ServerTableAttribute {
+public class TableAttributeServer {
     public final static String DB_NAME = "test_DB";
     // IM VOIP server DB and table //
     public final static String USER_TABLE = "UserTable";
@@ -11,11 +11,13 @@ public class ServerTableAttribute {
     public final static String USER_EMAIL = "UserEmail";
     public final static String USER_DEPT = "UserDept";
     public final static String USER_CONTACTS = "UserContacts";
-    public final static String USER_INVITE = "UserInvites";
+    public final static String USER_INVITES = "UserInvites";
     public final static String USER_BE_INVITED = "UserBeInvited";
     public final static String USER_GROUP = "UserGroup";
     public final static String USER_GROUP_BE_INVITED = "UserGroupBeInvited";
     public final static String USER_PICTURE = "UserPicture";
+    public final static String USER_IMEI = "UserIMEI";
+    public final static String USER_REGISTER_ID = "UserRegisterID";
 
     public final static String GROUP_TABLE = "GroupTable";
     public final static String GROUP_ID = "GroupID";
@@ -24,22 +26,15 @@ public class ServerTableAttribute {
     public final static String GROUP_INVITERS = "GroupInviters";
     public final static String GROUP_PICTURE = "GroupPicture";
 
-    public final static String USER_CHAT_TABLE = "UserChatTable";
-    public final static String USER_CHAT_ID = "UserChatID";
-    public final static String USER_CHAT_FROM_WHO = "UserChatFromWho";
-    public final static String USER_CHAT_TO_WHO = "UserChatToWho";
-    public final static String USER_CHAT_CONTENT = "UserChatContent";
-    public final static String USER_CHAT_TIME = "UserChatTime";
-    public final static String USER_CHAT_READ_STATUS = "UserChatReadStatus";
-
-    public final static String GROUP_CHAT_TABLE = "GroupChatTable";
-    public final static String GROUP_CHAT_ID = "GroupChatID";
-    public final static String GROUP_CHAT_FROM_WHO = "GroupChatFromWho";
-    public final static String GROUP_CHAT_TO_WHO = "GroupChatToWho";
-    public final static String GROUP_CHAT_CONTENT = "GroupChatContent";
-    public final static String GROUP_CHAT_TIME = "GroupChatTime";
-    public final static String GROUP_CHAT_READ_STATUS = "GroupChatReadStatus";
-    public final static String GROUP_CHAT_POST_ID = "GroupChatPostID";
+    public final static String CHAT_TABLE = "UserChatTable";
+    public final static String CHAT_ID = "UserChatID";
+    public final static String CHAT_FROM_WHO = "UserChatFromWho";
+    public final static String CHAT_TO_WHO = "UserChatToWho";
+    public final static String CHAT_CONTENT = "UserChatContent";
+    public final static String CHAT_TIME = "UserChatTime";
+    public final static String CHAT_IS_GROUP = "isGroup";
+    public final static String CHAT_POST_ID = "ChatPostID";
+    public final static String CHAT_READ_STATUS = "UserChatReadStatus";
 
     public final static String POST_TABLE = "PostTable";
     public final static String POST_ID = "PostID";
@@ -60,6 +55,8 @@ public class ServerTableAttribute {
     public final static String MEETING_STATE = "MeetingState";
     public final static String MEETING_NOTES = "MeetingNotes";
     public final static String MEETING_DETAILS = "MeetingDetails";
+    public final static String MEETING_WHO_ACCEPT = "MeetingWhoAccept";
+    public final static String MEETING_WHO_REJECT = "MeetingWhoReject";
 
     public void test() {
         /*

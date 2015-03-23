@@ -11,9 +11,9 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
-import sqliteExample.ServerTableAttribute;
+import sqliteExample.TableAttributeServer;
 
-public class GroupTableFunction extends ServerTableAttribute {
+public class TableFunctionGroup extends TableAttributeServer {
     private static Connection mConnection = null;
     private static Statement mStatement = null;
 
@@ -23,7 +23,7 @@ public class GroupTableFunction extends ServerTableAttribute {
             System.out.println("Opened database successfully");
             mStatement = mConnection.createStatement();
             String sql = "CREATE TABLE if not exists " + GROUP_TABLE + "(" + GROUP_ID
-                    + " INTEGER PRIMARY KEY AUTOINCREMENT, " + GROUP_NAME + " CHAR(20) NOT NULL, " + GROUP_MEMBERS
+                    + " INTEGER PRIMARY KEY AUTOINCREMENT, " + GROUP_NAME + " CHAR(10) NOT NULL, " + GROUP_MEMBERS
                     + " TEXT, " + GROUP_INVITERS + " TEXT, " + GROUP_PICTURE + " TEXT " + ")";
             mStatement.executeUpdate(sql);
             mStatement.close();

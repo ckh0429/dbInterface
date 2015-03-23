@@ -7,13 +7,14 @@ import java.sql.DriverManager;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Iterator;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
-import sqliteExample.ServerTableAttribute;
+import sqliteExample.TableAttributeServer;
 
-public class MeetingTableFunction extends ServerTableAttribute {
+public class TableFunctionUser extends TableAttributeServer {
     private static Connection mConnection = null;
     private static Statement mStatement = null;
 
@@ -22,12 +23,13 @@ public class MeetingTableFunction extends ServerTableAttribute {
             mConnection = DriverManager.getConnection("jdbc:sqlite:" + dbName + ".db");
             System.out.println("Opened database successfully");
             mStatement = mConnection.createStatement();
-            String sql = "CREATE TABLE if not exists " + MEETING_TABLE + "(" + MEETING_ID
-                    + " INTEGER PRIMARY KEY AUTOINCREMENT, " + MEETING_FROM_WHO + " CHAR(20) NOT NULL, "
-                    + MEETING_TO_WHO + " CHAR(20) NOT NULL, " + MEETING_NAME + " TEXT, " + MEETING_START_TIME
-                    + " CHAR(20) NOT NULL, " + MEETING_END_TIME + " CHAR(20) NOT NULL, " + MEETING_STATE
-                    + " CHAR(20) NOT NULL, " + MEETING_NOTES + " TEXT, " + MEETING_DETAILS + " TEXT " + ")";
-
+            String sql = "CREATE TABLE if not exists " + USER_TABLE + "(" + USER_ID
+                    + " INTEGER PRIMARY KEY AUTOINCREMENT, " + USER_NAME + " CHAR(10) NOT NULL, " + USER_MOBILE
+                    + " CHAR(10) NOT NULL, " + USER_EXTENSION + " CHAR(10) NOT NULL, " + USER_EMAIL
+                    + " TEXT NOT NULL UNIQUE, " + USER_DEPT + " CHAR(10) NOT NULL, " + USER_CONTACTS + " TEXT, "
+                    + USER_INVITES + " TEXT, " + USER_BE_INVITED + " TEXT, " + USER_GROUP + " TEXT, "
+                    + USER_GROUP_BE_INVITED + " TEXT, " + USER_IMEI + " TEXT NOT NULL, "+ USER_REGISTER_ID + " TEXT NOT NULL, "
+                    + USER_PICTURE + " TEXT " + ")";
             mStatement.executeUpdate(sql);
             mStatement.close();
             mConnection.close();
@@ -35,6 +37,7 @@ public class MeetingTableFunction extends ServerTableAttribute {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
             return (false);
+
         }
         System.out.println("Table created successfully");
         return true;
@@ -42,30 +45,42 @@ public class MeetingTableFunction extends ServerTableAttribute {
 
     public static boolean insert(JSONArray rawData) {
 
-        ArrayList<String> meetingFromWho = new ArrayList<String>();
-        ArrayList<String> meetingToWho = new ArrayList<String>();
-        ArrayList<String> meetingName = new ArrayList<String>();
-        ArrayList<String> meetingStartTime = new ArrayList<String>();
-        ArrayList<String> meetingEndTime = new ArrayList<String>();
-        ArrayList<String> meetingState = new ArrayList<String>();
-        ArrayList<String> meetingNotes = new ArrayList<String>();
-        ArrayList<String> meetingDetails = new ArrayList<String>();
+        ArrayList<String> userName = new ArrayList<String>();
+        ArrayList<String> userMobile = new ArrayList<String>();
+        ArrayList<String> userEmail = new ArrayList<String>();
+        ArrayList<String> userExtension = new ArrayList<String>();
+        ArrayList<String> userDept = new ArrayList<String>();
+        ArrayList<String> userContacts = new ArrayList<String>();
+        ArrayList<String> userInvite = new ArrayList<String>();
+        ArrayList<String> userBeInvited = new ArrayList<String>();
+        ArrayList<String> userGroup = new ArrayList<String>();
+        ArrayList<String> userGroupBeInvited = new ArrayList<String>();
+        ArrayList<String> userIMEI = new ArrayList<String>();
+        ArrayList<String> userRegisterID = new ArrayList<String>();
+        ArrayList<String> userPicture = new ArrayList<String>();
         String value = "";
 
         for (int i = 0; i < rawData.size(); i++) {
             JSONObject jobj = (JSONObject) rawData.get(i);
-            meetingFromWho.add(jobj.get(MEETING_FROM_WHO).toString());
-            meetingToWho.add(jobj.get(MEETING_TO_WHO).toString());
-            meetingName.add(jobj.get(MEETING_NAME).toString());
-            meetingStartTime.add(jobj.get(MEETING_START_TIME).toString());
-            meetingEndTime.add(jobj.get(MEETING_END_TIME).toString());
-            meetingState.add(jobj.get(MEETING_STATE).toString());
-            meetingNotes.add(jobj.get(MEETING_NOTES).toString());
-            meetingDetails.add(jobj.get(MEETING_DETAILS).toString());
+            userName.add(jobj.get(USER_NAME).toString());
+            userMobile.add(jobj.get(USER_MOBILE).toString());
+            userExtension.add(jobj.get(USER_EXTENSION).toString());
+            userEmail.add(jobj.get(USER_EMAIL).toString());
+            userDept.add(jobj.get(USER_DEPT).toString());
+            userContacts.add(jobj.get(USER_CONTACTS).toString());
+            userInvite.add(jobj.get(USER_INVITES).toString());
+            userBeInvited.add(jobj.get(USER_BE_INVITED).toString());
+            userGroup.add(jobj.get(USER_GROUP).toString());
+            userGroupBeInvited.add(jobj.get(USER_GROUP_BE_INVITED).toString());
+            userIMEI.add(jobj.get(USER_IMEI).toString());
+            userRegisterID.add(jobj.get(USER_REGISTER_ID).toString());
+            userPicture.add(jobj.get(USER_PICTURE).toString());
 
-            value = value + "('" + meetingFromWho.get(i) + "', '" + meetingToWho.get(i) + "', '" + meetingName.get(i)
-                    + "', '" + meetingStartTime.get(i) + "', '" + meetingEndTime.get(i) + "', '" + meetingState.get(i)
-                    + "', '" + meetingNotes.get(i) + "', '" + meetingDetails.get(i) + "')";
+            value = value + "('" + userName.get(i) + "', '" + userMobile.get(i) + "', '" + userExtension.get(i)
+                    + "', '" + userEmail.get(i) + "', '" + userDept.get(i) + "', '" + userContacts.get(i) + "', '"
+                    + userInvite.get(i) + "', '" + userBeInvited.get(i) + "', '" + userGroup.get(i) + "', '"
+                    + userGroupBeInvited.get(i) + "', '" + userIMEI.get(i) + "', '"+ userRegisterID.get(i) + "', '"
+                    + userPicture.get(i) + "' )";
 
             if (i != rawData.size() - 1) {
                 value = value + ", ";
@@ -81,9 +96,10 @@ public class MeetingTableFunction extends ServerTableAttribute {
             mConnection.setAutoCommit(false);
             System.out.println("Opened database successfully");
             mStatement = mConnection.createStatement();
-            String sql = "INSERT INTO " + MEETING_TABLE + " (" + MEETING_FROM_WHO + "," + MEETING_TO_WHO + ","
-                    + MEETING_NAME + "," + MEETING_START_TIME + "," + MEETING_END_TIME + "," + MEETING_STATE + ","
-                    + MEETING_NOTES + "," + MEETING_DETAILS + ") " + "VALUES " + value;
+            String sql = "INSERT INTO " + USER_TABLE + " (" + USER_NAME + "," + USER_MOBILE + "," + USER_EXTENSION
+                    + "," + USER_EMAIL + "," + USER_DEPT + "," + USER_CONTACTS + "," + USER_INVITES + ","
+                    + USER_BE_INVITED + "," + USER_GROUP + "," + USER_GROUP_BE_INVITED + "," + USER_IMEI + ","+ USER_REGISTER_ID + ","
+                    + USER_PICTURE + ") " + "VALUES " + value;
 
             mStatement.executeUpdate(sql);
             mStatement.close();
@@ -97,8 +113,8 @@ public class MeetingTableFunction extends ServerTableAttribute {
         return true;
     }
 
-    public static boolean update(int meetingID, JSONObject rawData) throws FileNotFoundException, IOException,
-            ParseException {
+    public static boolean update(int userID, JSONObject rawData) throws FileNotFoundException,
+            IOException, ParseException {
         String setValue = "";
         for (@SuppressWarnings("rawtypes")
         Iterator iterator = rawData.keySet().iterator(); iterator.hasNext();) {
@@ -112,8 +128,7 @@ public class MeetingTableFunction extends ServerTableAttribute {
             mConnection.setAutoCommit(false);
             System.out.println("update Opened database successfully");
             mStatement = mConnection.createStatement();
-            String sql = "UPDATE " + MEETING_TABLE + " set " + setValue + " where " + MEETING_ID + " = " + meetingID
-                    + ";";
+            String sql = "UPDATE " + USER_TABLE + " set " + setValue + " where " + USER_ID + " = " + userID + ";";
             System.out.println("test : " + sql);
             mStatement.executeUpdate(sql);
             mConnection.commit();
@@ -127,13 +142,13 @@ public class MeetingTableFunction extends ServerTableAttribute {
         return true;
     }
 
-    public static boolean delete(int meetingID) {
+    public static boolean delete(int userID) {
         try {
             mConnection = DriverManager.getConnection("jdbc:sqlite:" + DB_NAME + ".db");
             mConnection.setAutoCommit(false);
             System.out.println("Opened database successfully");
             mStatement = mConnection.createStatement();
-            String sql = "DELETE from " + MEETING_TABLE + " where " + MEETING_ID + "= " + meetingID + ";";
+            String sql = "DELETE from " + USER_TABLE + " where " + USER_ID + "= " + userID + ";";
             mStatement.executeUpdate(sql);
             mConnection.commit();
             mStatement.close();

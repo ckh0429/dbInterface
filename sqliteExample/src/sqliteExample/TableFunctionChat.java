@@ -11,9 +11,9 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
-import sqliteExample.ServerTableAttribute;
+import sqliteExample.TableAttributeServer;
 
-public class UserChatTableFunction extends ServerTableAttribute {
+public class TableFunctionChat extends TableAttributeServer {
     private static Connection mConnection = null;
     private static Statement mStatement = null;
 
@@ -22,10 +22,11 @@ public class UserChatTableFunction extends ServerTableAttribute {
             mConnection = DriverManager.getConnection("jdbc:sqlite:" + dbName + ".db");
             System.out.println("Opened database successfully");
             mStatement = mConnection.createStatement();
-            String sql = "CREATE TABLE if not exists " + USER_CHAT_TABLE + "(" + USER_CHAT_ID
-                    + " INTEGER PRIMARY KEY AUTOINCREMENT, " + USER_CHAT_FROM_WHO + " CHAR(20) NOT NULL, "
-                    + USER_CHAT_TO_WHO + " CHAR(20) NOT NULL, " + USER_CHAT_CONTENT + " TEXT, " + USER_CHAT_TIME
-                    + " CHAR(20) NOT NULL, " + USER_CHAT_READ_STATUS + " TEXT " + ")";
+            String sql = "CREATE TABLE if not exists " + CHAT_TABLE + "(" + CHAT_ID
+                    + " INTEGER PRIMARY KEY AUTOINCREMENT, " + CHAT_FROM_WHO + " TEXT NOT NULL, "
+                    + CHAT_TO_WHO + " TEXT NOT NULL, " + CHAT_CONTENT + " TEXT, " 
+                    + CHAT_TIME + " INTEGER NOT NULL, " + CHAT_IS_GROUP + " BOOLEAN NOT NULL, "+ CHAT_POST_ID + " INTEGER, "
+                    + CHAT_READ_STATUS + " TEXT " + ")";
             mStatement.executeUpdate(sql);
             mStatement.close();
             mConnection.close();
@@ -41,23 +42,28 @@ public class UserChatTableFunction extends ServerTableAttribute {
 
     public static boolean insert(JSONArray rawData) {
 
-        ArrayList<String> userChatFromWho = new ArrayList<String>();
-        ArrayList<String> userChatToWho = new ArrayList<String>();
-        ArrayList<String> userChatContent = new ArrayList<String>();
-        ArrayList<String> userChatTime = new ArrayList<String>();
-        ArrayList<String> userChatReadStatus = new ArrayList<String>();
+        ArrayList<String> chatFromWho = new ArrayList<String>();
+        ArrayList<String> chatToWho = new ArrayList<String>();
+        ArrayList<String> chatContent = new ArrayList<String>();
+        ArrayList<Long> chatTime = new ArrayList<Long>();
+        ArrayList<Boolean> chatIsGroup = new ArrayList<Boolean>();
+        ArrayList<Long> chatPostID = new ArrayList<Long>();
+        ArrayList<String> chatReadStatus = new ArrayList<String>();
         String value = "";
 
         for (int i = 0; i < rawData.size(); i++) {
             JSONObject jobj = (JSONObject) rawData.get(i);
-            userChatFromWho.add(jobj.get(USER_CHAT_FROM_WHO).toString());
-            userChatToWho.add(jobj.get(USER_CHAT_TO_WHO).toString());
-            userChatContent.add(jobj.get(USER_CHAT_CONTENT).toString());
-            userChatTime.add(jobj.get(USER_CHAT_TIME).toString());
-            userChatReadStatus.add(jobj.get(USER_CHAT_READ_STATUS).toString());
+            chatFromWho.add(jobj.get(CHAT_FROM_WHO).toString());
+            chatToWho.add(jobj.get(CHAT_TO_WHO).toString());
+            chatContent.add(jobj.get(CHAT_CONTENT).toString());
+            chatTime.add((Long)jobj.get(CHAT_TIME));
+            chatIsGroup.add((Boolean)jobj.get(CHAT_IS_GROUP));
+            chatPostID.add((Long)jobj.get(CHAT_POST_ID));
+            chatReadStatus.add(jobj.get(CHAT_READ_STATUS).toString());
 
-            value = value + "('" + userChatFromWho.get(i) + "', '" + userChatToWho.get(i) + "', '"
-                    + userChatContent.get(i) + "', '" + userChatTime.get(i) + "', '" + userChatReadStatus.get(i) + "')";
+            value = value + "('" + chatFromWho.get(i) + "', '" + chatToWho.get(i) + "', '"
+                    + chatContent.get(i) + "', '" + chatTime.get(i) + "', '" + chatIsGroup.get(i) + "', '"+ chatPostID.get(i) + "', '"
+                    + chatReadStatus.get(i) + "')";
 
             if (i != rawData.size() - 1) {
                 value = value + ", ";
@@ -73,8 +79,9 @@ public class UserChatTableFunction extends ServerTableAttribute {
             mConnection.setAutoCommit(false);
             System.out.println("Opened database successfully");
             mStatement = mConnection.createStatement();
-            String sql = "INSERT INTO " + USER_CHAT_TABLE + " (" + USER_CHAT_FROM_WHO + "," + USER_CHAT_TO_WHO + ","
-                    + USER_CHAT_CONTENT + "," + USER_CHAT_TIME + "," + USER_CHAT_READ_STATUS + ") " + "VALUES " + value;
+            String sql = "INSERT INTO " + CHAT_TABLE + " (" + CHAT_FROM_WHO + "," + CHAT_TO_WHO + ","
+                    + CHAT_CONTENT + "," + CHAT_TIME + "," + CHAT_IS_GROUP + ","+ CHAT_POST_ID + ","
+                    + CHAT_READ_STATUS + ") " + "VALUES " + value;
 
             mStatement.executeUpdate(sql);
             mStatement.close();
@@ -103,7 +110,7 @@ public class UserChatTableFunction extends ServerTableAttribute {
             mConnection.setAutoCommit(false);
             System.out.println("update Opened database successfully");
             mStatement = mConnection.createStatement();
-            String sql = "UPDATE " + USER_CHAT_TABLE + " set " + setValue + " where " + USER_CHAT_ID + " = "
+            String sql = "UPDATE " + CHAT_TABLE + " set " + setValue + " where " + CHAT_ID + " = "
                     + userChatID + ";";
             System.out.println("test : " + sql);
             mStatement.executeUpdate(sql);
@@ -124,7 +131,7 @@ public class UserChatTableFunction extends ServerTableAttribute {
             mConnection.setAutoCommit(false);
             System.out.println("Opened database successfully");
             mStatement = mConnection.createStatement();
-            String sql = "DELETE from " + USER_CHAT_TABLE + " where " + USER_CHAT_ID + "= " + userChatID + ";";
+            String sql = "DELETE from " + CHAT_TABLE + " where " + CHAT_ID + "= " + userChatID + ";";
             mStatement.executeUpdate(sql);
             mConnection.commit();
             mStatement.close();

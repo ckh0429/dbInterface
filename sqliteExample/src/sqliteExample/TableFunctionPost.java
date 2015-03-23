@@ -12,9 +12,9 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
-import sqliteExample.ServerTableAttribute;
+import sqliteExample.TableAttributeServer;
 
-public class UserTableFunction extends ServerTableAttribute {
+public class TableFunctionPost extends TableAttributeServer {
     private static Connection mConnection = null;
     private static Statement mStatement = null;
 
@@ -23,12 +23,10 @@ public class UserTableFunction extends ServerTableAttribute {
             mConnection = DriverManager.getConnection("jdbc:sqlite:" + dbName + ".db");
             System.out.println("Opened database successfully");
             mStatement = mConnection.createStatement();
-            String sql = "CREATE TABLE if not exists " + USER_TABLE + "(" + USER_ID
-                    + " INTEGER PRIMARY KEY AUTOINCREMENT, " + USER_NAME + " CHAR(20) NOT NULL, " + USER_MOBILE
-                    + " CHAR(20) NOT NULL, " + USER_EXTENSION + " CHAR(20) NOT NULL, " + USER_EMAIL
-                    + " CHAR(30) NOT NULL UNIQUE, " + USER_DEPT + " CHAR(20) NOT NULL, " + USER_CONTACTS + " TEXT, "
-                    + USER_INVITE + " TEXT, " + USER_BE_INVITED + " TEXT, " + USER_GROUP + " TEXT, "
-                    + USER_GROUP_BE_INVITED + " TEXT, " + USER_PICTURE + " TEXT " + ")";
+            String sql = "CREATE TABLE if not exists " + POST_TABLE + "(" + POST_ID
+                    + " INTEGER PRIMARY KEY AUTOINCREMENT, " + POST_FROM_WHO + " TEXT NOT NULL, " + POST_TO_WHO
+                    + " TEXT NOT NULL, " + POST_SUBJECT + " TEXT, " + POST_CONTENT + " TEXT, " + POST_TIME
+                    + " INTEGER NOT NULL, " + POST_READ_STATUS + " TEXT " + ")";
             mStatement.executeUpdate(sql);
             mStatement.close();
             mConnection.close();
@@ -44,37 +42,25 @@ public class UserTableFunction extends ServerTableAttribute {
 
     public static boolean insert(JSONArray rawData) {
 
-        ArrayList<String> userName = new ArrayList<String>();
-        ArrayList<String> userMobile = new ArrayList<String>();
-        ArrayList<String> userEmail = new ArrayList<String>();
-        ArrayList<String> userExtension = new ArrayList<String>();
-        ArrayList<String> userDept = new ArrayList<String>();
-        ArrayList<String> userContacts = new ArrayList<String>();
-        ArrayList<String> userInvite = new ArrayList<String>();
-        ArrayList<String> userBeInvited = new ArrayList<String>();
-        ArrayList<String> userGroup = new ArrayList<String>();
-        ArrayList<String> userGroupBeInvited = new ArrayList<String>();
-        ArrayList<String> userPicture = new ArrayList<String>();
+        ArrayList<String> postFromWho = new ArrayList<String>();
+        ArrayList<String> postToWho = new ArrayList<String>();
+        ArrayList<String> postSubject = new ArrayList<String>();
+        ArrayList<String> postContent = new ArrayList<String>();
+        ArrayList<Long> postTime = new ArrayList<Long>();
+        ArrayList<String> postReadStatus = new ArrayList<String>();
         String value = "";
 
         for (int i = 0; i < rawData.size(); i++) {
             JSONObject jobj = (JSONObject) rawData.get(i);
-            userName.add(jobj.get(USER_NAME).toString());
-            userMobile.add(jobj.get(USER_MOBILE).toString());
-            userExtension.add(jobj.get(USER_EXTENSION).toString());
-            userEmail.add(jobj.get(USER_EMAIL).toString());
-            userDept.add(jobj.get(USER_DEPT).toString());
-            userContacts.add(jobj.get(USER_CONTACTS).toString());
-            userInvite.add(jobj.get(USER_INVITE).toString());
-            userBeInvited.add(jobj.get(USER_BE_INVITED).toString());
-            userGroup.add(jobj.get(USER_GROUP).toString());
-            userGroupBeInvited.add(jobj.get(USER_GROUP_BE_INVITED).toString());
-            userPicture.add(jobj.get(USER_PICTURE).toString());
+            postFromWho.add(jobj.get(POST_FROM_WHO).toString());
+            postToWho.add(jobj.get(POST_TO_WHO).toString());
+            postSubject.add(jobj.get(POST_SUBJECT).toString());
+            postContent.add(jobj.get(POST_CONTENT).toString());
+            postTime.add((Long)jobj.get(POST_TIME));
+            postReadStatus.add(jobj.get(POST_READ_STATUS).toString());
 
-            value = value + "('" + userName.get(i) + "', '" + userMobile.get(i) + "', '" + userExtension.get(i)
-                    + "', '" + userEmail.get(i) + "', '" + userDept.get(i) + "', '" + userContacts.get(i) + "', '"
-                    + userInvite.get(i) + "', '" + userBeInvited.get(i) + "', '" + userGroup.get(i) + "', '"
-                    + userGroupBeInvited.get(i) + "', '" + userPicture.get(i) + "' )";
+            value = value + "('" + postFromWho.get(i) + "', '" + postToWho.get(i) + "', '" + postSubject.get(i)
+                    + "', '" + postContent.get(i) + "', '" + postTime.get(i) + "', '" + postReadStatus.get(i) + "')";
 
             if (i != rawData.size() - 1) {
                 value = value + ", ";
@@ -90,10 +76,8 @@ public class UserTableFunction extends ServerTableAttribute {
             mConnection.setAutoCommit(false);
             System.out.println("Opened database successfully");
             mStatement = mConnection.createStatement();
-            String sql = "INSERT INTO " + USER_TABLE + " (" + USER_NAME + "," + USER_MOBILE + "," + USER_EXTENSION
-                    + "," + USER_EMAIL + "," + USER_DEPT + "," + USER_CONTACTS + "," + USER_INVITE + ","
-                    + USER_BE_INVITED + "," + USER_GROUP + "," + USER_GROUP_BE_INVITED + "," + USER_PICTURE + ") "
-                    + "VALUES " + value;
+            String sql = "INSERT INTO " + POST_TABLE + " (" + POST_FROM_WHO + "," + POST_TO_WHO + "," + POST_SUBJECT
+                    + "," + POST_CONTENT + "," + POST_TIME + "," + POST_READ_STATUS + ") " + "VALUES " + value;
 
             mStatement.executeUpdate(sql);
             mStatement.close();
@@ -107,8 +91,8 @@ public class UserTableFunction extends ServerTableAttribute {
         return true;
     }
 
-    public static boolean update(int userID, JSONObject rawData) throws FileNotFoundException,
-            IOException, ParseException {
+    public static boolean update(int postID, JSONObject rawData) throws FileNotFoundException, IOException,
+            ParseException {
         String setValue = "";
         for (@SuppressWarnings("rawtypes")
         Iterator iterator = rawData.keySet().iterator(); iterator.hasNext();) {
@@ -122,7 +106,7 @@ public class UserTableFunction extends ServerTableAttribute {
             mConnection.setAutoCommit(false);
             System.out.println("update Opened database successfully");
             mStatement = mConnection.createStatement();
-            String sql = "UPDATE " + USER_TABLE + " set " + setValue + " where " + USER_ID + " = " + userID + ";";
+            String sql = "UPDATE " + POST_TABLE + " set " + setValue + " where " + POST_ID + " = " + postID + ";";
             System.out.println("test : " + sql);
             mStatement.executeUpdate(sql);
             mConnection.commit();
@@ -136,13 +120,13 @@ public class UserTableFunction extends ServerTableAttribute {
         return true;
     }
 
-    public static boolean delete(int userID) {
+    public static boolean delete(int postID) {
         try {
             mConnection = DriverManager.getConnection("jdbc:sqlite:" + DB_NAME + ".db");
             mConnection.setAutoCommit(false);
             System.out.println("Opened database successfully");
             mStatement = mConnection.createStatement();
-            String sql = "DELETE from " + USER_TABLE + " where " + USER_ID + "= " + userID + ";";
+            String sql = "DELETE from " + POST_TABLE + " where " + POST_ID + "= " + postID + ";";
             mStatement.executeUpdate(sql);
             mConnection.commit();
             mStatement.close();

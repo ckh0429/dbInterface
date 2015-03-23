@@ -9,17 +9,16 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
-import sqliteExample.ServerTableAttribute;
+import sqliteExample.TableAttributeServer;
 
-public class APIFunction extends ServerTableAttribute {
+public class APIFunction extends TableAttributeServer {
 
     public static void main(String args[]) throws FileNotFoundException, IOException, ParseException {
         String[] dbName = { DB_NAME };
         createDB(dbName);
-        //testUserTableFunction();
-        testUserChatTableFunction();
+        testUserTableFunction();
         testGroupTableFunction();
-        testGroupChatTableFunction();
+        testChatTableFunction();
         testPostTableFunction();
         testMeetingTableFunction();
     }
@@ -49,10 +48,12 @@ public class APIFunction extends ServerTableAttribute {
         insertDataJob.put(USER_EMAIL, "ckh0429@gmail.com");
         insertDataJob.put(USER_DEPT, "Acer");
         insertDataJob.put(USER_CONTACTS, "Acer");
-        insertDataJob.put(USER_INVITE, "Acer");
+        insertDataJob.put(USER_INVITES, "Acer");
         insertDataJob.put(USER_BE_INVITED, "Acer");
         insertDataJob.put(USER_GROUP, "Acer");
         insertDataJob.put(USER_GROUP_BE_INVITED, "Acer");
+        insertDataJob.put(USER_IMEI, "Acer");
+        insertDataJob.put(USER_REGISTER_ID, "Acer");
         insertDataJob.put(USER_PICTURE, "Acer");
         insertDataJsa.add(insertDataJob);
         System.out.println("jsonarray1 is :" + insertDataJsa.toJSONString());
@@ -60,13 +61,15 @@ public class APIFunction extends ServerTableAttribute {
         insertDataJob.put(USER_NAME, "paul");
         insertDataJob.put(USER_MOBILE, "0933913329");
         insertDataJob.put(USER_EXTENSION, "5122");
-        insertDataJob.put(USER_EMAIL, "paul2@gmail.com");
+        insertDataJob.put(USER_EMAIL, "paul1211@gmail.com");
         insertDataJob.put(USER_DEPT, "intel");
         insertDataJob.put(USER_CONTACTS, "intel");
-        insertDataJob.put(USER_INVITE, "intel");
+        insertDataJob.put(USER_INVITES, "intel");
         insertDataJob.put(USER_BE_INVITED, "intel");
         insertDataJob.put(USER_GROUP, "intel");
         insertDataJob.put(USER_GROUP_BE_INVITED, "intel");
+        insertDataJob.put(USER_IMEI, "intel");
+        insertDataJob.put(USER_REGISTER_ID, "intel");
         insertDataJob.put(USER_PICTURE, "intel");
         insertDataJsa.add(insertDataJob);
         System.out.println("jsonarray2 is :" + insertDataJsa.toJSONString());
@@ -79,7 +82,7 @@ public class APIFunction extends ServerTableAttribute {
         insertDataJob.put(USER_EXTENSION, "5173");
         insertDataJob.put(USER_EMAIL, "ckh04291@gmail.com");
 
-        insertDataJob.put(USER_INVITE, "Acer2");
+        insertDataJob.put(USER_INVITES, "Acer2");
         insertDataJob.put(USER_BE_INVITED, "Acer2");
         insertDataJob.put(USER_GROUP, "Acer2");
         insertDataJob.put(USER_GROUP_BE_INVITED, "Acer2");
@@ -89,10 +92,10 @@ public class APIFunction extends ServerTableAttribute {
         return insertDataJob;
     }
     public static void testUserTableFunction() throws FileNotFoundException, IOException, ParseException{
-        UserTableFunction.create(DB_NAME);
-        UserTableFunction.insert(createUserTableTestJson());
-        UserTableFunction.update(1,createUserTableUpdateTestJsonObj());
-        UserTableFunction.delete(1);
+        TableFunctionUser.create(DB_NAME);
+        TableFunctionUser.insert(createUserTableTestJson());
+        TableFunctionUser.update(1,createUserTableUpdateTestJsonObj());
+        TableFunctionUser.delete(1);
     }
     
     public static JSONArray createGroupTableTestJson() {
@@ -124,90 +127,54 @@ public class APIFunction extends ServerTableAttribute {
         return insertDataJob;
     }
     public static void testGroupTableFunction() throws FileNotFoundException, IOException, ParseException{
-        GroupTableFunction.create(DB_NAME);
-        GroupTableFunction.insert(createGroupTableTestJson());
-        GroupTableFunction.update(1,createGroupTableUpdateTestJsonObj());
-        GroupTableFunction.delete(1);
+        TableFunctionGroup.create(DB_NAME);
+        TableFunctionGroup.insert(createGroupTableTestJson());
+        TableFunctionGroup.update(1,createGroupTableUpdateTestJsonObj());
+        TableFunctionGroup.delete(1);
     }
 
     public static JSONArray createUserChatTableTestJson() {
         JSONArray insertDataJsa = new JSONArray();
         JSONObject insertDataJob = new JSONObject();
-        insertDataJob.put(USER_CHAT_FROM_WHO, "KH");
-        insertDataJob.put(USER_CHAT_TO_WHO, "Acer");
-        insertDataJob.put(USER_CHAT_CONTENT, "Acer");
-        insertDataJob.put(USER_CHAT_TIME, "Acer");
-        insertDataJob.put(USER_CHAT_READ_STATUS, "Acer");
+        insertDataJob.put(CHAT_FROM_WHO, "KH");
+        insertDataJob.put(CHAT_TO_WHO, "Acer");
+        insertDataJob.put(CHAT_CONTENT, "Acer");
+        insertDataJob.put(CHAT_TIME, 123456L);
+        insertDataJob.put(CHAT_IS_GROUP, false);
+        insertDataJob.put(CHAT_POST_ID, 123456890L);
+        insertDataJob.put(CHAT_READ_STATUS, "Acer");
         insertDataJsa.add(insertDataJob);
         System.out.println("jsonarray1 is :" + insertDataJsa.toJSONString());
         insertDataJob = new JSONObject();
-        insertDataJob.put(USER_CHAT_FROM_WHO, "paup");
-        insertDataJob.put(USER_CHAT_TO_WHO, "Acer33");
-        insertDataJob.put(USER_CHAT_CONTENT, "Acer33");
-        insertDataJob.put(USER_CHAT_TIME, "Acer33");
-        insertDataJob.put(USER_CHAT_READ_STATUS, "Acer33");
+        insertDataJob.put(CHAT_FROM_WHO, "paup");
+        insertDataJob.put(CHAT_TO_WHO, "Acer33");
+        insertDataJob.put(CHAT_CONTENT, "Acer33");
+        insertDataJob.put(CHAT_TIME, "Acer33");
+        insertDataJob.put(CHAT_TIME, 987654L);
+        insertDataJob.put(CHAT_IS_GROUP, true);
+        insertDataJob.put(CHAT_POST_ID, 9876543210L);
+        insertDataJob.put(CHAT_READ_STATUS, "Acer33");
         insertDataJsa.add(insertDataJob);
         System.out.println("jsonarray2 is :" + insertDataJsa.toJSONString());
         return insertDataJsa;
     }
     public static JSONObject createUserChatTableUpdateTestJsonObj() {
         JSONObject insertDataJob = new JSONObject();
-        insertDataJob.put(USER_CHAT_FROM_WHO, "KH");
-        insertDataJob.put(USER_CHAT_TO_WHO, "Acer");
-        insertDataJob.put(USER_CHAT_CONTENT, "Acer");
-        insertDataJob.put(USER_CHAT_TIME, "Acer");
-        insertDataJob.put(USER_CHAT_READ_STATUS, "Acer");
+        insertDataJob.put(CHAT_FROM_WHO, "KH");
+        insertDataJob.put(CHAT_TO_WHO, "Acer");
+        insertDataJob.put(CHAT_CONTENT, "Acer");
+        insertDataJob.put(CHAT_TIME, "Acer");
+        insertDataJob.put(CHAT_READ_STATUS, "Acer");
         System.out.println("jsonObj is :" + insertDataJob.toJSONString());
         
         return insertDataJob;
     }
     
-    public static void testUserChatTableFunction() throws FileNotFoundException, IOException, ParseException{
-        UserChatTableFunction.create(DB_NAME);
-        UserChatTableFunction.insert(createUserChatTableTestJson());
-        UserChatTableFunction.update(1,createUserChatTableUpdateTestJsonObj());
-        UserChatTableFunction.delete(1);
-    }
-    
-    public static JSONArray createGroupChatTableTestJson() {
-        JSONArray insertDataJsa = new JSONArray();
-        JSONObject insertDataJob = new JSONObject();
-        insertDataJob.put(GROUP_CHAT_FROM_WHO, "KH");
-        insertDataJob.put(GROUP_CHAT_TO_WHO, "Acer");
-        insertDataJob.put(GROUP_CHAT_CONTENT, "Acer");
-        insertDataJob.put(GROUP_CHAT_TIME, "Acer");
-        insertDataJob.put(GROUP_CHAT_READ_STATUS, "Acer");
-        insertDataJob.put(GROUP_CHAT_POST_ID, "Acer");
-        insertDataJsa.add(insertDataJob);
-        System.out.println("jsonarray1 is :" + insertDataJsa.toJSONString());
-        insertDataJob = new JSONObject();
-        insertDataJob.put(GROUP_CHAT_FROM_WHO, "paup");
-        insertDataJob.put(GROUP_CHAT_TO_WHO, "Acer33");
-        insertDataJob.put(GROUP_CHAT_CONTENT, "Acer33");
-        insertDataJob.put(GROUP_CHAT_TIME, "Acer33");
-        insertDataJob.put(GROUP_CHAT_READ_STATUS, "Acer33");
-        insertDataJob.put(GROUP_CHAT_POST_ID, "Acer");
-        insertDataJsa.add(insertDataJob);
-        System.out.println("jsonarray2 is :" + insertDataJsa.toJSONString());
-        return insertDataJsa;
-    }
-    public static JSONObject createGroupChatTableUpdateTestJsonObj() {
-        JSONObject insertDataJob = new JSONObject();
-        insertDataJob.put(GROUP_CHAT_FROM_WHO, "KH");
-        insertDataJob.put(GROUP_CHAT_TO_WHO, "Acer");
-        insertDataJob.put(GROUP_CHAT_CONTENT, "Acer");
-        insertDataJob.put(GROUP_CHAT_TIME, "Acer");
-        insertDataJob.put(GROUP_CHAT_READ_STATUS, "Acer");
-        insertDataJob.put(GROUP_CHAT_POST_ID, "Acer");
-        System.out.println("jsonObj is :" + insertDataJob.toJSONString());
-        
-        return insertDataJob;
-    }
-    public static void testGroupChatTableFunction() throws FileNotFoundException, IOException, ParseException{
-        GroupChatTableFunction.create(DB_NAME);
-        GroupChatTableFunction.insert(createGroupChatTableTestJson());
-        GroupChatTableFunction.update(1,createGroupChatTableUpdateTestJsonObj());
-        GroupChatTableFunction.delete(1);
+    public static void testChatTableFunction() throws FileNotFoundException, IOException, ParseException{
+        TableFunctionChat.create(DB_NAME);
+        TableFunctionChat.insert(createUserChatTableTestJson());
+        TableFunctionChat.update(1,createUserChatTableUpdateTestJsonObj());
+        TableFunctionChat.delete(1);
     }
     
     public static JSONArray createPostTableTestJson() {
@@ -217,7 +184,7 @@ public class APIFunction extends ServerTableAttribute {
         insertDataJob.put(POST_TO_WHO, "Acer");
         insertDataJob.put(POST_SUBJECT, "Acer");
         insertDataJob.put(POST_CONTENT, "Acer");
-        insertDataJob.put(POST_TIME, "Acer");
+        insertDataJob.put(POST_TIME, 123456789L);
         insertDataJob.put(POST_READ_STATUS, "Acer");
         insertDataJsa.add(insertDataJob);
         System.out.println("jsonarray1 is :" + insertDataJsa.toJSONString());
@@ -226,7 +193,7 @@ public class APIFunction extends ServerTableAttribute {
         insertDataJob.put(POST_TO_WHO, "Acer33");
         insertDataJob.put(POST_SUBJECT, "Acer");
         insertDataJob.put(POST_CONTENT, "Acer33");
-        insertDataJob.put(POST_TIME, "Acer33");
+        insertDataJob.put(POST_TIME, 789546213546849L);
         insertDataJob.put(POST_READ_STATUS, "Acer33");
         insertDataJsa.add(insertDataJob);
         System.out.println("jsonarray2 is :" + insertDataJsa.toJSONString());
@@ -245,10 +212,10 @@ public class APIFunction extends ServerTableAttribute {
         return insertDataJob;
     }
     public static void testPostTableFunction() throws FileNotFoundException, IOException, ParseException{
-        PostTableFunction.create(DB_NAME);
-        PostTableFunction.insert(createPostTableTestJson());
-        PostTableFunction.update(1,createPostTableUpdateTestJsonObj());
-        PostTableFunction.delete(1);
+        TableFunctionPost.create(DB_NAME);
+        TableFunctionPost.insert(createPostTableTestJson());
+        TableFunctionPost.update(1,createPostTableUpdateTestJsonObj());
+        TableFunctionPost.delete(1);
     }
     
     public static JSONArray createMeetingTableTestJson() {
@@ -257,22 +224,26 @@ public class APIFunction extends ServerTableAttribute {
         insertDataJob.put(MEETING_FROM_WHO, "KH");
         insertDataJob.put(MEETING_TO_WHO, "Acer");
         insertDataJob.put(MEETING_NAME, "Acer");
-        insertDataJob.put(MEETING_START_TIME, "Acer");
-        insertDataJob.put(MEETING_END_TIME, "Acer");
+        insertDataJob.put(MEETING_START_TIME, 1234562137910L);
+        insertDataJob.put(MEETING_END_TIME, 5566778899021231230L);
         insertDataJob.put(MEETING_STATE, "Acer");
         insertDataJob.put(MEETING_NOTES, "Acer");
         insertDataJob.put(MEETING_DETAILS, "Acer");
+        insertDataJob.put(MEETING_WHO_ACCEPT, "Acer224324342");
+        insertDataJob.put(MEETING_WHO_REJECT, "Acer2223423423423");
         insertDataJsa.add(insertDataJob);
         System.out.println("jsonarray1 is :" + insertDataJsa.toJSONString());
         insertDataJob = new JSONObject();
         insertDataJob.put(MEETING_FROM_WHO, "paul");
         insertDataJob.put(MEETING_TO_WHO, "Acer22");
         insertDataJob.put(MEETING_NAME, "Acer22");
-        insertDataJob.put(MEETING_START_TIME, "Acer22");
-        insertDataJob.put(MEETING_END_TIME, "Acer22");
+        insertDataJob.put(MEETING_START_TIME, 123456790L);
+        insertDataJob.put(MEETING_END_TIME, 556677889900L);
         insertDataJob.put(MEETING_STATE, "Acer22");
         insertDataJob.put(MEETING_NOTES, "Acer22");
         insertDataJob.put(MEETING_DETAILS, "Acer22");
+        insertDataJob.put(MEETING_WHO_ACCEPT, "Acer224324342");
+        insertDataJob.put(MEETING_WHO_REJECT, "Acer2223423423423");
         insertDataJsa.add(insertDataJob);
         System.out.println("jsonarray2 is :" + insertDataJsa.toJSONString());
         return insertDataJsa;
@@ -280,21 +251,23 @@ public class APIFunction extends ServerTableAttribute {
     public static JSONObject createMeetingTableUpdateTestJsonObj() {
         JSONObject insertDataJob = new JSONObject();
         insertDataJob.put(MEETING_FROM_WHO, "KH");
-        insertDataJob.put(MEETING_TO_WHO, "Acer");
-        insertDataJob.put(MEETING_NAME, "Acer");
-        insertDataJob.put(MEETING_START_TIME, "Acer");
-        insertDataJob.put(MEETING_END_TIME, "Acer");
-        insertDataJob.put(MEETING_STATE, "Acer");
-        insertDataJob.put(MEETING_NOTES, "Acer");
-        insertDataJob.put(MEETING_DETAILS, "Acer");
+        insertDataJob.put(MEETING_TO_WHO, "intel");
+        insertDataJob.put(MEETING_NAME, "intel");
+        insertDataJob.put(MEETING_START_TIME, 9874561238521L);
+        insertDataJob.put(MEETING_END_TIME, 1427081932873L);
+        insertDataJob.put(MEETING_STATE, "intel");
+        insertDataJob.put(MEETING_NOTES, "intel");
+        insertDataJob.put(MEETING_DETAILS, "intel");
+        insertDataJob.put(MEETING_WHO_ACCEPT, "intel224324342");
+        insertDataJob.put(MEETING_WHO_REJECT, "intel2223423423423");
         System.out.println("jsonObj is :" + insertDataJob.toJSONString());
         
         return insertDataJob;
     }
     public static void testMeetingTableFunction() throws FileNotFoundException, IOException, ParseException{
-        MeetingTableFunction.create(DB_NAME);
-        MeetingTableFunction.insert(createMeetingTableTestJson());
-        MeetingTableFunction.update(1,createMeetingTableUpdateTestJsonObj());
-        MeetingTableFunction.delete(1);
+        TableFunctionMeeting.create(DB_NAME);
+        TableFunctionMeeting.insert(createMeetingTableTestJson());
+        TableFunctionMeeting.update(1,createMeetingTableUpdateTestJsonObj());
+        TableFunctionMeeting.delete(1);
     }
 }
